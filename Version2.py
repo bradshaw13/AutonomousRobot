@@ -90,28 +90,28 @@ def Around():
     
     while uss.read() < 15:
         if lefts < rights and rights > 15:
-            digitalWrite(led1,1)
-            gpg.turn_degrees(30, True)
-            digitalWrite(led1,0)
+            digitalWrite(led2,0)
+            gpg.turn_degrees(30)
+            digitalWrite(led2,1)
             #time.sleep(1)
             print("I am turning right 10 degrees")
         elif rights < lefts and lefts > 15:
-            digitalWrite(led2,1)
-            gpg.turn_degrees(-30, True)
-            digitalWrite(led2,0)
+            digitalWrite(led1,0)
+            gpg.turn_degrees(-30)
+            digitalWrite(led1,1)
             #time.sleep(1)
             print("I am turning left 10 degrees")
         elif rights == lefts and rights > 15:
-            digitalWrite(led1,1)
-            gpg.turn_degrees(30, True)
-            digitalWrite(led1,0)
+            digitalWrite(led2,0)
+            gpg.turn_degrees(30)
+            digitalWrite(led2,1)
             #time.sleep(1)
             print("objects equal amount away going right")
         else:
             digitalWrite(led1,0)
             digitalWrite(led2,0)
             digitalWrite(buz,1)
-            gpg.drive_cm(-20, True)
+            gpg.drive_cm(-20)
             digitalWrite(buz,0)
             gpg.turn_degrees(90) 
             print("breaking")
@@ -124,6 +124,7 @@ def main():
     try:
         print("GoPiGo3 Autonomous Robot")
         servo.reset_servo()
+        time.sleep(1)
 
         #make sure voltage is high enough if not will exit the code
         if gpg.volt() < 9:
@@ -142,22 +143,17 @@ def main():
                 Around()
                 
                                 
-            #motion detected within 50cm will make the robot stop then
-            #pause for one second then check if there is motion again if there
-            #is motion the around function will be called
-            #if there is no motion on the second check
-            #the robot will continue to go forward unless
-            #the requirements for an if statement is met
+            #if there is motion detected the robot will stop then buzz
+            #and then will continue throught the code
             elif pir.motion_detected():
                 print("motin detected")
                 gpg.stop()
                 digitalWrite(buz,1)
                 print("buzzing")
-                time.sleep(1)
+                time.sleep(.1)
                 digitalWrite(buz,0)
+                time.sleep(.5)
                 
-                if pir.motion_detected():
-                    Around()
                     
 
             else:
